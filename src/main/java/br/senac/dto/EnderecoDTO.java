@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class EnderecoDTO {
     private int id;
-    private UfDTO uf;
-    private String cep;
+    private int cep;
     private String bairro;
     private String cidade;
     private String endereco;
+    private String complemento;
+    private String UF;
     @JsonIgnore
     private PessoaDTO pessoa;
 
@@ -22,19 +23,12 @@ public class EnderecoDTO {
         this.id = id;
     }
 
-    public UfDTO getUf() {
-        return uf;
-    }
 
-    public void setUf(UfDTO uf) {
-        this.uf = uf;
-    }
-
-    public String getCep() {
+    public int getCep() {
         return cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep(int cep) {
         this.cep = cep;
     }
 
@@ -60,6 +54,22 @@ public class EnderecoDTO {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
+    }
+
+    public String getUF() {
+        return UF;
+    }
+
+    public void setUF(String UF) {
+        this.UF = UF;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
     }
 
     public PessoaDTO getPessoa() {

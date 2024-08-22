@@ -2,10 +2,8 @@ package br.senac.service;
 
 import br.senac.dao.PessoaDAO;
 import br.senac.dao.EnderecoDAO;
-import br.senac.dao.UfDAO;
 import br.senac.dto.PessoaDTO;
 import br.senac.dto.EnderecoDTO;
-import br.senac.dto.UfDTO;
 import br.senac.exceptions.PessoaNaoEncontradaException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,9 +22,6 @@ public class PessoaService {
 
     @Inject
     private EnderecoDAO enderecoDAO;
-
-    @Inject
-    private UfDAO ufDAO;
 
     @Inject
     private DataSource dataSource;
@@ -68,11 +63,6 @@ public class PessoaService {
 
             List<EnderecoDTO> enderecos = enderecoDAO.findByPessoaId(conn, id);
 
-            for (EnderecoDTO endereco : enderecos) {
-                UfDTO ufEndereco = ufDAO.findById(conn, endereco.getUf().getId());
-                endereco.setUf(ufEndereco);
-            }
-
             return enderecos;
         }
     }
@@ -104,8 +94,6 @@ public class PessoaService {
         try (Connection conn = dataSource.getConnection()) {
             PessoaDTO pessoa = pessoaDAO.findById(conn, id);
             if (pessoa != null) {
-                UfDTO uf = ufDAO.findById(conn, pessoa.getUf().getId());
-                pessoa.setUf(uf);
                 List<EnderecoDTO> enderecos = enderecoDAO.findByPessoaId(conn, id);
                 pessoa.setEnderecos(new ArrayList<>(enderecos));
             }
@@ -117,16 +105,9 @@ public class PessoaService {
         try (Connection conn = dataSource.getConnection()) {
             List<PessoaDTO> pessoas = pessoaDAO.findAll(conn);
             for (PessoaDTO pessoa : pessoas) {
-                // Recuperar a UF da pessoa
-                UfDTO ufPessoa = ufDAO.findById(conn, pessoa.getUf().getId());
-                pessoa.setUf(ufPessoa);
 
                 // Recuperar os endereços da pessoa e a UF de cada endereço
                 List<EnderecoDTO> enderecos = enderecoDAO.findByPessoaId(conn, pessoa.getId());
-                for (EnderecoDTO endereco : enderecos) {
-                    UfDTO ufEndereco = ufDAO.findById(conn, endereco.getUf().getId());
-                    endereco.setUf(ufEndereco);
-                }
                 pessoa.setEnderecos(new ArrayList<>(enderecos));
             }
             return pessoas;

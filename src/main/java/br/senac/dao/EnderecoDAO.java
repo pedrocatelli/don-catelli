@@ -2,7 +2,6 @@ package br.senac.dao;
 
 import br.senac.dto.EnderecoDTO;
 import br.senac.dto.PessoaDTO;
-import br.senac.dto.UfDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Connection;
@@ -16,29 +15,31 @@ import java.util.List;
 public class EnderecoDAO {
 
     public void save(Connection conn, EnderecoDTO endereco) throws SQLException {
-        String sql = "INSERT INTO public.endereco (id, id_uf, cep, bairro, cidade, endereco, id_pessoa) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO public.endereco (id, cep, endereco, complemento, bairro, cidade, uf, id_pessoa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, endereco.getId());
-            stmt.setInt(2, endereco.getUf().getId());
-            stmt.setString(3, endereco.getCep());
-            stmt.setString(4, endereco.getBairro());
-            stmt.setString(5, endereco.getCidade());
-            stmt.setString(6, endereco.getEndereco());
-            stmt.setInt(7, endereco.getPessoa() != null ? endereco.getPessoa().getId() : null);
+            int index = 1;
+            stmt.setInt(index++, endereco.getId());
+            stmt.setInt(index++, endereco.getCep());
+            stmt.setString(index++, endereco.getEndereco());
+            stmt.setString(index++, endereco.getComplemento());
+            stmt.setString(index++, endereco.getBairro());
+            stmt.setString(index++, endereco.getCidade());
+            stmt.setString(index++, endereco.getUF());
+            stmt.setInt(index, endereco.getPessoa() != null ? endereco.getPessoa().getId() : null);
             stmt.executeUpdate();
         }
     }
 
     public void update(Connection conn, EnderecoDTO endereco) throws SQLException {
-        String sql = "UPDATE public.endereco SET id_uf = ?, cep = ?, bairro = ?, cidade = ?, endereco = ?, id_pessoa = ? WHERE id = ?";
+        String sql = "UPDATE public.endereco SET cep = ?, bairro = ?, cidade = ?, endereco = ?, id_pessoa = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, endereco.getUf().getId());
-            stmt.setString(2, endereco.getCep());
-            stmt.setString(3, endereco.getBairro());
-            stmt.setString(4, endereco.getCidade());
-            stmt.setString(5, endereco.getEndereco());
-            stmt.setInt(6, endereco.getPessoa() != null ? endereco.getPessoa().getId() : null);
-            stmt.setInt(7, endereco.getId());
+            int index = 1;
+            stmt.setInt(index++, endereco.getCep());
+            stmt.setString(index++, endereco.getBairro());
+            stmt.setString(index++, endereco.getCidade());
+            stmt.setString(index++, endereco.getEndereco());
+            stmt.setInt(index++, endereco.getPessoa() != null ? endereco.getPessoa().getId() : null);
+            stmt.setInt(index, endereco.getId());
             stmt.executeUpdate();
         }
     }
@@ -52,17 +53,14 @@ public class EnderecoDAO {
     }
 
     public EnderecoDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, id_uf, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id = ?";
+        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     EnderecoDTO endereco = new EnderecoDTO();
                     endereco.setId(rs.getInt("id"));
-                    UfDTO uf = new UfDTO();
-                    uf.setId(rs.getInt("id_uf"));
-                    endereco.setUf(uf);
-                    endereco.setCep(rs.getString("cep"));
+                    endereco.setCep(rs.getInt("cep"));
                     endereco.setBairro(rs.getString("bairro"));
                     endereco.setCidade(rs.getString("cidade"));
                     endereco.setEndereco(rs.getString("endereco"));
@@ -79,17 +77,14 @@ public class EnderecoDAO {
     }
 
     public List<EnderecoDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, id_uf, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco";
+        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco";
         List<EnderecoDTO> enderecos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 EnderecoDTO endereco = new EnderecoDTO();
                 endereco.setId(rs.getInt("id"));
-                UfDTO uf = new UfDTO();
-                uf.setId(rs.getInt("id_uf"));
-                endereco.setUf(uf);
-                endereco.setCep(rs.getString("cep"));
+                endereco.setCep(rs.getInt("cep"));
                 endereco.setBairro(rs.getString("bairro"));
                 endereco.setCidade(rs.getString("cidade"));
                 endereco.setEndereco(rs.getString("endereco"));
@@ -105,7 +100,7 @@ public class EnderecoDAO {
     }
 
     public List<EnderecoDTO> findByPessoaId(Connection conn, int pessoaId) throws SQLException {
-        String sql = "SELECT id, id_uf, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id_pessoa = ?";
+        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id_pessoa = ?";
         List<EnderecoDTO> enderecos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, pessoaId);
@@ -113,10 +108,7 @@ public class EnderecoDAO {
                 while (rs.next()) {
                     EnderecoDTO endereco = new EnderecoDTO();
                     endereco.setId(rs.getInt("id"));
-                    UfDTO uf = new UfDTO();
-                    uf.setId(rs.getInt("id_uf"));
-                    endereco.setUf(uf);
-                    endereco.setCep(rs.getString("cep"));
+                    endereco.setCep(rs.getInt("cep"));
                     endereco.setBairro(rs.getString("bairro"));
                     endereco.setCidade(rs.getString("cidade"));
                     endereco.setEndereco(rs.getString("endereco"));

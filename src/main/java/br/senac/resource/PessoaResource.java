@@ -2,7 +2,6 @@ package br.senac.resource;
 
 import br.senac.dto.EnderecoDTO;
 import br.senac.dto.PessoaDTO;
-import br.senac.dto.UfDTO;
 import br.senac.exceptions.PessoaNaoEncontradaException;
 import br.senac.service.PessoaService;
 import jakarta.inject.Inject;
@@ -39,6 +38,7 @@ public class PessoaResource {
             pessoaService.createPessoa(pessoa);
             return Response.status(Response.Status.CREATED).entity(pessoa).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -56,6 +56,7 @@ public class PessoaResource {
             pessoaService.updatePessoa(pessoa);
             return Response.ok(pessoa).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -73,6 +74,7 @@ public class PessoaResource {
             pessoaService.deletePessoa(id);
             return Response.noContent().build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -95,6 +97,7 @@ public class PessoaResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -111,6 +114,7 @@ public class PessoaResource {
             List<PessoaDTO> pessoas = pessoaService.getAllPessoas();
             return Response.ok(pessoas).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
@@ -129,6 +133,7 @@ public class PessoaResource {
             List<EnderecoDTO> enderecos = pessoaService.buscarEnderecos(id);
             return Response.ok(enderecos).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (PessoaNaoEncontradaException pne){
             return Response.status(Response.Status.NOT_FOUND).entity("Pessoa não existe!").build();
@@ -150,6 +155,7 @@ public class PessoaResource {
             pessoaService.createEndereco(id, endereco);
             return Response.status(Response.Status.CREATED).entity(endereco).build();
         } catch (SQLException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } catch (PessoaNaoEncontradaException pne){
             return Response.status(Response.Status.NOT_FOUND).entity("Pessoa não existe!").build();

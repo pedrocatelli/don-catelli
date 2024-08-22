@@ -1,7 +1,6 @@
 package br.senac.dao;
 
 import br.senac.dto.PessoaDTO;
-import br.senac.dto.UfDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,25 +13,27 @@ import java.util.List;
 public class PessoaDAO {
 
     public void save(Connection conn, PessoaDTO pessoa) throws SQLException {
-        String sql = "INSERT INTO public.pessoa (id, nome, email, dt_nascimento, id_uf_naturalidade) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO public.pessoa (id, nome, cpf, email, telefone) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, pessoa.getId());
-            stmt.setString(2, pessoa.getNome());
-            stmt.setString(3, pessoa.getEmail());
-            stmt.setDate(4, new java.sql.Date(pessoa.getNascimento().getTime()));
-            stmt.setInt(5, pessoa.getUf().getId());
+            int index = 1;
+            stmt.setInt(index++, pessoa.getId());
+            stmt.setString(index++, pessoa.getNome());
+            stmt.setInt(index++, pessoa.getCpf());
+            stmt.setString(index++, pessoa.getEmail());
+            stmt.setInt(index, pessoa.getTelefone());
             stmt.executeUpdate();
         }
     }
 
     public void update(Connection conn, PessoaDTO pessoa) throws SQLException {
-        String sql = "UPDATE public.pessoa SET nome = ?, email = ?, dt_nascimento = ?, id_uf_naturalidade = ? WHERE id = ?";
+        String sql = "UPDATE public.pessoa SET nome = ?, email = ?, cpf = ?, telefone = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, pessoa.getNome());
-            stmt.setString(2, pessoa.getEmail());
-            stmt.setDate(3, new java.sql.Date(pessoa.getNascimento().getTime()));
-            stmt.setInt(4, pessoa.getUf().getId());
-            stmt.setInt(5, pessoa.getId());
+            int index = 1;
+            stmt.setString(index++, pessoa.getNome());
+            stmt.setString(index++, pessoa.getEmail());
+            stmt.setInt(index++, pessoa.getCpf());
+            stmt.setInt(index++, pessoa.getTelefone());
+            stmt.setInt(index, pessoa.getId());
             stmt.executeUpdate();
         }
     }
@@ -46,7 +47,7 @@ public class PessoaDAO {
     }
 
     public PessoaDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, nome, email, dt_nascimento, id_uf_naturalidade FROM public.pessoa WHERE id = ?";
+        String sql = "SELECT id, nome, cpf, email, telefone FROM public.pessoa WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -54,12 +55,9 @@ public class PessoaDAO {
                     PessoaDTO pessoa = new PessoaDTO();
                     pessoa.setId(rs.getInt("id"));
                     pessoa.setNome(rs.getString("nome"));
+                    pessoa.setCpf(rs.getInt("cpf"));
                     pessoa.setEmail(rs.getString("email"));
-                    pessoa.setNascimento(rs.getDate("dt_nascimento"));
-
-                    UfDTO uf = new UfDTO();
-                    uf.setId(rs.getInt("id_uf_naturalidade"));
-                    pessoa.setUf(uf);
+                    pessoa.setTelefone(rs.getInt("telefone"));
 
                     return pessoa;
                 }
@@ -69,7 +67,7 @@ public class PessoaDAO {
     }
 
     public List<PessoaDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, nome, email, dt_nascimento, id_uf_naturalidade FROM public.pessoa";
+        String sql = "SELECT id, nome, cpf, email, telefone FROM public.pessoa";
         List<PessoaDTO> pessoas = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -77,12 +75,9 @@ public class PessoaDAO {
                 PessoaDTO pessoa = new PessoaDTO();
                 pessoa.setId(rs.getInt("id"));
                 pessoa.setNome(rs.getString("nome"));
+                pessoa.setCpf(rs.getInt("cpf"));
                 pessoa.setEmail(rs.getString("email"));
-                pessoa.setNascimento(rs.getDate("dt_nascimento"));
-
-                UfDTO uf = new UfDTO();
-                uf.setId(rs.getInt("id_uf_naturalidade"));
-                pessoa.setUf(uf);
+                pessoa.setTelefone(rs.getInt("telefone"));
 
                 pessoas.add(pessoa);
             }

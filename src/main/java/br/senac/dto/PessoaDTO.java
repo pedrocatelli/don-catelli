@@ -1,16 +1,13 @@
 package br.senac.dto;
 
-import br.senac.dto.UfDTO;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 public class PessoaDTO {
     private int id;
     private String nome;
     private String email;
-    private Date nascimento;
-    private UfDTO uf;
+    private int cpf;
+    private int telefone;
     private ArrayList<EnderecoDTO> enderecos;
     // Getters and Setters
 
@@ -39,20 +36,20 @@ public class PessoaDTO {
         this.email = email;
     }
 
-    public Date getNascimento() {
-        return nascimento;
+    public int getCpf() {
+        return cpf;
     }
 
-    public void setNascimento(Date nascimento) {
-        this.nascimento = nascimento;
+    public void setCpf(int cpf) {
+        this.cpf = cpf;
     }
 
-    public UfDTO getUf() {
-        return uf;
+    public int getTelefone() {
+        return telefone;
     }
 
-    public void setUf(UfDTO uf) {
-        this.uf = uf;
+    public void setTelefone(int telefone) {
+        this.telefone = telefone;
     }
 
     public ArrayList<EnderecoDTO> getEnderecos() {
