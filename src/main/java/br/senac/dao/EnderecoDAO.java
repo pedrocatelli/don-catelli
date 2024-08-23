@@ -30,20 +30,6 @@ public class EnderecoDAO {
         }
     }
 
-    public void update(Connection conn, EnderecoDTO endereco) throws SQLException {
-        String sql = "UPDATE public.endereco SET cep = ?, bairro = ?, cidade = ?, endereco = ?, id_pessoa = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            int index = 1;
-            stmt.setInt(index++, endereco.getCep());
-            stmt.setString(index++, endereco.getBairro());
-            stmt.setString(index++, endereco.getCidade());
-            stmt.setString(index++, endereco.getEndereco());
-            stmt.setInt(index++, endereco.getPessoa() != null ? endereco.getPessoa().getId() : null);
-            stmt.setInt(index, endereco.getId());
-            stmt.executeUpdate();
-        }
-    }
-
     public void delete(Connection conn, int id) throws SQLException {
         String sql = "DELETE FROM public.endereco WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -53,17 +39,20 @@ public class EnderecoDAO {
     }
 
     public EnderecoDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id = ?";
+        String sql = "SELECT id, cep, endereco, complemento, bairro, cidade, uf, id_pessoa FROM public.endereco WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     EnderecoDTO endereco = new EnderecoDTO();
+
                     endereco.setId(rs.getInt("id"));
                     endereco.setCep(rs.getInt("cep"));
+                    endereco.setBairro(rs.getString("endereco"));
+                    endereco.setBairro(rs.getString("complemento"));
                     endereco.setBairro(rs.getString("bairro"));
                     endereco.setCidade(rs.getString("cidade"));
-                    endereco.setEndereco(rs.getString("endereco"));
+                    endereco.setCidade(rs.getString("uf"));
                     if (rs.getInt("id_pessoa") != 0) {
                         PessoaDTO pessoa = new PessoaDTO();
                         pessoa.setId(rs.getInt("id_pessoa"));
@@ -77,7 +66,7 @@ public class EnderecoDAO {
     }
 
     public List<EnderecoDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco";
+        String sql = "SELECT id, cep, endereco, complemento, bairro, cidade, uf, id_pessoa FROM public.endereco";
         List<EnderecoDTO> enderecos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -85,9 +74,11 @@ public class EnderecoDAO {
                 EnderecoDTO endereco = new EnderecoDTO();
                 endereco.setId(rs.getInt("id"));
                 endereco.setCep(rs.getInt("cep"));
+                endereco.setBairro(rs.getString("endereco"));
+                endereco.setBairro(rs.getString("complemento"));
                 endereco.setBairro(rs.getString("bairro"));
                 endereco.setCidade(rs.getString("cidade"));
-                endereco.setEndereco(rs.getString("endereco"));
+                endereco.setCidade(rs.getString("uf"));
                 if (rs.getInt("id_pessoa") != 0) {
                     PessoaDTO pessoa = new PessoaDTO();
                     pessoa.setId(rs.getInt("id_pessoa"));
@@ -100,7 +91,7 @@ public class EnderecoDAO {
     }
 
     public List<EnderecoDTO> findByPessoaId(Connection conn, int pessoaId) throws SQLException {
-        String sql = "SELECT id, cep, bairro, cidade, endereco, id_pessoa FROM public.endereco WHERE id_pessoa = ?";
+        String sql = "SELECT id, cep, endereco, complemento, bairro, cidade, uf, id_pessoa FROM public.endereco WHERE id_pessoa = ?";
         List<EnderecoDTO> enderecos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, pessoaId);
@@ -109,9 +100,11 @@ public class EnderecoDAO {
                     EnderecoDTO endereco = new EnderecoDTO();
                     endereco.setId(rs.getInt("id"));
                     endereco.setCep(rs.getInt("cep"));
+                    endereco.setBairro(rs.getString("endereco"));
+                    endereco.setBairro(rs.getString("complemento"));
                     endereco.setBairro(rs.getString("bairro"));
                     endereco.setCidade(rs.getString("cidade"));
-                    endereco.setEndereco(rs.getString("endereco"));
+                    endereco.setCidade(rs.getString("uf"));
                     if (rs.getInt("id_pessoa") != 0) {
                         PessoaDTO pessoa = new PessoaDTO();
                         pessoa.setId(rs.getInt("id_pessoa"));

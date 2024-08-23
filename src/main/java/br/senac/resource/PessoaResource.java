@@ -128,7 +128,7 @@ public class PessoaResource {
             @APIResponse(responseCode = "500", description = "Erro interno do servidor"),
             @APIResponse(responseCode = "404", description = "Pessoa não encontrada")
     })
-    public Response obterTodasPessoas(@PathParam("id") int id) throws Exception{
+    public Response obterTodosEnderecosPorIdPessoa(@PathParam("id") int id) throws Exception{
         try {
             List<EnderecoDTO> enderecos = pessoaService.buscarEnderecos(id);
             return Response.ok(enderecos).build();
