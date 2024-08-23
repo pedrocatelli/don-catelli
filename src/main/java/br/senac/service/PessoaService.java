@@ -71,11 +71,6 @@ public class PessoaService {
     public void updatePessoa(PessoaDTO pessoa) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             pessoaDAO.update(conn, pessoa);
-
-            for (EnderecoDTO endereco : pessoa.getEnderecos()) {
-                endereco.setPessoa(pessoa);
-                enderecoDAO.update(conn, endereco);
-            }
         }
     }
 
