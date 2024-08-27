@@ -8,7 +8,7 @@ public class PagamentoDTO {
     private PessoaDTO pessoa;
     private EnderecoDTO endereco;
     private String tipo;
-    private Date dataPagamento;
+    private java.sql.Date dataPagamento;
 
     public int getId() {
         return id;
@@ -42,11 +42,11 @@ public class PagamentoDTO {
         this.tipo = tipo;
     }
 
-    public Date getDataPagamento() {
+    public java.sql.Date getDataPagamento() {
         return dataPagamento;
     }
 
-    public void setDataPagamento(Date dataPagamento) {
+    public void setDataPagamento(java.sql.Date dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
 }

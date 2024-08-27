@@ -1,5 +1,7 @@
 package br.senac.dao;
 
+import br.senac.dto.EnderecoDTO;
+import br.senac.dto.PagamentoDTO;
 import br.senac.dto.PessoaDTO;
 
 import java.sql.Connection;
@@ -7,85 +9,103 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class PagamentoDAO {
 
-    public void save(Connection conn, PessoaDTO pessoa) throws SQLException {
-        String sql = "INSERT INTO public.pessoa (id, nome, cpf, email, telefone) VALUES (?, ?, ?, ?, ?)";
+    public void save(Connection conn, PagamentoDTO pagamento) throws SQLException {
+        String sql = "INSERT INTO public.pagamento (id, id_pessoa, id_endereco, tipo, data_venda) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
-            stmt.setInt(index++, pessoa.getId());
-            stmt.setString(index++, pessoa.getNome());
-            stmt.setInt(index++, pessoa.getCpf());
-            stmt.setString(index++, pessoa.getEmail());
-            stmt.setInt(index, pessoa.getTelefone());
+            stmt.setInt(index++, pagamento.getId());
+            stmt.setInt(index++, pagamento.getPessoa() != null ? pagamento.getPessoa().getId() : null);
+            stmt.setInt(index++, pagamento.getEndereco() != null ? pagamento.getEndereco().getId() : null);
+            stmt.setString(index++, pagamento.getTipo());
+            stmt.setDate(index, pagamento.getDataPagamento());
             stmt.executeUpdate();
         }
     }
 
-    public void update(Connection conn, PessoaDTO pessoa) throws SQLException {
-        String sql = "UPDATE public.pessoa SET nome = ?, email = ?, cpf = ?, telefone = ? WHERE id = ?";
+    public void update(Connection conn, PagamentoDTO pagamento) throws SQLException {
+        String sql = "UPDATE public.pagamento SET id_pessoa = ?, id_endereco = ?, tipo = ?, data_venda = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
-            stmt.setString(index++, pessoa.getNome());
-            stmt.setString(index++, pessoa.getEmail());
-            stmt.setInt(index++, pessoa.getCpf());
-            stmt.setInt(index++, pessoa.getTelefone());
-            stmt.setInt(index, pessoa.getId());
+            stmt.setInt(index++, pagamento.getId());
+            stmt.setInt(index++, pagamento.getPessoa() != null ? pagamento.getPessoa().getId() : null);
+            stmt.setInt(index++, pagamento.getEndereco() != null ? pagamento.getEndereco().getId() : null);
+            stmt.setString(index++, pagamento.getTipo());
+            stmt.setDate(index, pagamento.getDataPagamento());
             stmt.executeUpdate();
         }
     }
 
     public void delete(Connection conn, int id) throws SQLException {
-        String sql = "DELETE FROM public.pessoa WHERE id = ?";
+        String sql = "DELETE FROM public.pagamento WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
     }
 
-    public PessoaDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, nome, cpf, email, telefone FROM public.pessoa WHERE id = ?";
+    public PagamentoDTO findById(Connection conn, int id) throws SQLException {
+        String sql = "SELECT id, id_pessoa, id_endereco, tipo, data_venda FROM public.pagamento WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    PessoaDTO pessoa = new PessoaDTO();
-                    pessoa.setId(rs.getInt("id"));
-                    pessoa.setNome(rs.getString("nome"));
-                    pessoa.setCpf(rs.getInt("cpf"));
-                    pessoa.setEmail(rs.getString("email"));
-                    pessoa.setTelefone(rs.getInt("telefone"));
+                    PagamentoDTO pagamento = new PagamentoDTO();
+                    pagamento.setId(rs.getInt("id"));
+                    if (rs.getInt("id_pessoa") != 0) {
+                        PessoaDTO pessoa = new PessoaDTO();
+                        pessoa.setId(rs.getInt("id"));
+                        pagamento.setPessoa(pessoa);
+                    }
+                    if (rs.getInt("id_endereco") != 0) {
+                        EnderecoDTO endereco = new EnderecoDTO();
+                        endereco.setId(rs.getInt("id"));
+                        pagamento.setEndereco(endereco);
+                    }
+                    pagamento.setTipo(rs.getString("tipo"));
+                    pagamento.setDataPagamento(rs.getDate("data_venda"));
 
-                    return pessoa;
+                    return pagamento;
                 }
             }
         }
         return null;
     }
 
-    public List<PessoaDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, nome, cpf, email, telefone FROM public.pessoa";
-        List<PessoaDTO> pessoas = new ArrayList<>();
+    public List<PagamentoDTO> findAll(Connection conn) throws SQLException {
+        String sql = "SELECT id, id_pessoa, id_endereco, tipo, data_venda FROM public.pagamento";
+        List<PagamentoDTO> pagamentos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                PessoaDTO pessoa = new PessoaDTO();
-                pessoa.setId(rs.getInt("id"));
-                pessoa.setNome(rs.getString("nome"));
-                pessoa.setCpf(rs.getInt("cpf"));
-                pessoa.setEmail(rs.getString("email"));
-                pessoa.setTelefone(rs.getInt("telefone"));
+                PagamentoDTO pagamento = new PagamentoDTO();
+                pagamento.setId(rs.getInt("id"));
+                if (rs.getInt("id_pessoa") != 0) {
+                    PessoaDTO pessoa = new PessoaDTO();
+                    pessoa.setId(rs.getInt("id"));
+                    pagamento.setPessoa(pessoa);
+                }
+                if (rs.getInt("id_endereco") != 0) {
+                    EnderecoDTO endereco = new EnderecoDTO();
+                    endereco.setId(rs.getInt("id"));
+                    pagamento.setEndereco(endereco);
+                }
+                pagamento.setTipo(rs.getString("tipo"));
+                pagamento.setDataPagamento(rs.getDate("data_venda"));
 
-                pessoas.add(pessoa);
+                pagamentos.add(pagamento);
             }
         }
-        return pessoas;
+        return pagamentos;
     }
 
+
     public int getNextId(Connection conn) throws SQLException {
-        String sql = "SELECT nextval('public.sq_pessoa')";
+        String sql = "SELECT nextval('public.sq_pagamento')";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {

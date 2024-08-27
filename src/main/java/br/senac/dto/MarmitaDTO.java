@@ -31,11 +31,11 @@ public class MarmitaDTO {
         this.acompanhamentos = acompanhamentos;
     }
 
-    public Proteina getProtenia() {
+    public ProteinaDTO getProtenia() {
         return protenia;
     }
 
-    public void setProtenia(Proteina protenia) {
+    public void setProtenia(ProteinaDTO protenia) {
         this.protenia = protenia;
     }
 
