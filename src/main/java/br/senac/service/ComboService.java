@@ -27,9 +27,9 @@ public class ComboService {
     private DataSource dataSource;
 
     @Transactional
-    private void createCombo(ComboDAO combo) throws SQLException {
+    public void createCombo(ComboDTO combo) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            int nextId = combo.getNextId(conn);
+            int nextId = comboDAO.getNextId(conn);
             combo.setId(nextId);
             comboDAO.save(conn, combo);
 
@@ -37,39 +37,27 @@ public class ComboService {
     }
 
     @Transactional
-    public void updateComobo(ComboDTO combo) throws SQLException {
+    public void updateCombo(ComboDTO combo) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             comboDAO.update(conn, combo);
-
         }
     }
 
     @Transactional
     public void deleteCombo(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            List<ComboDTO> combos = comboDAO.findByComboId(conn, id);
-            for (ComboDTO combo : combos) {
-                comboDAO.delete(conn, combo.getId());
-            }
             comboDAO.delete(conn, id);
         }
     }
 
     public ComboDTO getComboById(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            ComboDTO combo = comboDAO.findById(conn, id);
-            if (combo != null) {
-                List<ComboDTO> combos = comboDAO.findByComboId(conn, id);
-                combo.setCombo(new ArrayList<>(combos));
-            }
-            return combo;
+            return comboDAO.findById(conn, id);
         }
     }
     public List<ComboDTO> getAllCombos() throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            List<ComboDTO> combo = comboDAO.findAll(conn);
-
-            return combo;
+            return comboDAO.findAll(conn);
         }
     }
 
