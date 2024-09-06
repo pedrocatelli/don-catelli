@@ -1,9 +1,7 @@
-
 package br.senac.resource;
 
-
-import br.senac.dto.MarmitaDTO;
-import br.senac.service.MarmitaService;
+import br.senac.dto.PagamentoDTO;
+import br.senac.service.PagamentoService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,27 +14,26 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import java.sql.SQLException;
 import java.util.List;
 
-@Path("/marmita")
-@Tag(name = "Marmita Resource", description = "Endpoints para gerenciar marmita")
-public class MarmitaResource {
-
+@Path("/pagamentos")
+@Tag(name = "Pagamento Resource", description = "Endpoints para gerenciar pagamentos")
+public class PagamentoResource {
     @Inject
-    MarmitaService marmitaService;
+    PagamentoService pagamentoService;
 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Criar uma nova Marmita")
+    @Operation(summary = "Criar uma nova Pagamento")
     @APIResponses({
-            @APIResponse(responseCode = "201", description = "Marmita criada com sucesso"),
+            @APIResponse(responseCode = "201", description = "Pagamento criada com sucesso"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor"),
 
     })
-    public Response Marmita(MarmitaDTO marmita) {
+    public Response cadastrarPagamento(PagamentoDTO pagamento) {
         try {
-            marmitaService.createMarmita(marmita);
-            return Response.status(Response.Status.CREATED).entity(marmita).build();
+            pagamentoService.createPagamento(pagamento);
+            return Response.status(Response.Status.CREATED).entity(pagamento).build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -46,15 +43,15 @@ public class MarmitaResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Atualizar uma Marmita existente")
+    @Operation(summary = "Atualizar um pagamento existente")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Marmita atualizada com sucesso"),
+            @APIResponse(responseCode = "200", description = "Pagamento atualizado com sucesso"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public Response atualizarMarmita(MarmitaDTO marmita) {
+    public Response atualizarPagamento(PagamentoDTO pagamento) {
         try {
-            marmitaService.updateMarmita(marmita);
-            return Response.ok(marmita).build();
+            pagamentoService.updatePagamento(pagamento);
+            return Response.ok(pagamento).build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -64,14 +61,14 @@ public class MarmitaResource {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Deletar uma Marmita pelo ID")
+    @Operation(summary = "Deletar uma Pagamento pelo ID")
     @APIResponses({
-            @APIResponse(responseCode = "204", description = "Marmita deletada com sucesso"),
+            @APIResponse(responseCode = "204", description = "Pagamento deletado com sucesso"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public Response deletarMarmita(@PathParam("id") int id) {
+    public Response deletarPagamento(@PathParam("id") int id) {
         try {
-            marmitaService.deleteMarmita(id);
+            pagamentoService.deletePagamento(id);
             return Response.noContent().build();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,17 +79,17 @@ public class MarmitaResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Obter uma Marmita pelo ID")
+    @Operation(summary = "Obter uma Pagamento pelo ID")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Marmita obtida com sucesso"),
-            @APIResponse(responseCode = "404", description = "Marmita não encontrada"),
+            @APIResponse(responseCode = "200", description = "Pagamento obtida com sucesso"),
+            @APIResponse(responseCode = "404", description = "Pagamento não encontrada"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public Response obterMarmitaPorId(@PathParam("id") int id) {
+    public Response obterPagamentoPorId(@PathParam("id") int id) {
         try {
-            MarmitaDTO marmita = marmitaService.getMarmitaById(id);
-            if (marmita != null) {
-                return Response.ok(marmita).build();
+            PagamentoDTO pagamento = pagamentoService.getPagamentoById(id);
+            if (pagamento != null) {
+                return Response.ok(pagamento).build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
@@ -104,15 +101,15 @@ public class MarmitaResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Obter todas as Marmita")
+    @Operation(summary = "Obter todos os pagamentos")
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Marmita obtidas com sucesso"),
+            @APIResponse(responseCode = "200", description = "Pagamentos obtidos com sucesso"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public Response obterTodasMarmita() {
+    public Response obterTodasPagamentos() {
         try {
-            List<MarmitaDTO> marmita = marmitaService.getAllMarmitas();
-            return Response.ok(marmita).build();
+            List<PagamentoDTO> pagamentos = pagamentoService.getAllPagamentos();
+            return Response.ok(pagamentos).build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

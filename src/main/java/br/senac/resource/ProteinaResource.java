@@ -1,4 +1,7 @@
+package br.senac.resource;
+
 import br.senac.dto.ProteinaDTO;;
+import br.senac.service.ProteinaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -113,3 +116,4 @@ public class ProteinaResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+}

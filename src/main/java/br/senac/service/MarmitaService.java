@@ -29,7 +29,7 @@ public class MarmitaService {
     private DataSource dataSource;
 
     @Transactional
-    private void createMarmita(MarmitaDTO marmita) throws SQLException{
+    public void createMarmita(MarmitaDTO marmita) throws SQLException{
         try(Connection conn = dataSource.getConnection()){
             int nextId = marmitaDAO.getNextId(conn);
             marmita.setId(nextId);
