@@ -1,8 +1,10 @@
 package br.senac.service;
 
 import br.senac.dao.PagamentoDAO;
+import br.senac.dao.PessoaDAO;
 import br.senac.dto.PagamentoDTO;
 import br.senac.dto.PedidoDTO;
+import br.senac.dto.PessoaDTO;
 import jakarta.transaction.Transactional;
 
 import javax.sql.DataSource;
@@ -15,6 +17,8 @@ public class PagamentoService {
     DataSource dataSource;
 
     PagamentoDAO pagamentoDAO;
+
+    PessoaDAO pessoaDAO;
 
     @Transactional
     public void createPagamento(PagamentoDTO pagamento) throws SQLException {

@@ -5,6 +5,7 @@ import br.senac.dao.MarmitaDAO;
 import br.senac.dao.ProteinaDAO;
 import br.senac.dto.ComboDTO;
 import br.senac.dto.MarmitaDTO;
+import br.senac.dto.ProteinaDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -65,7 +66,18 @@ public class MarmitaService {
             return marmita;
         }
     }
+    public ComboDTO getComboByMarmitaId(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            MarmitaDTO marmita = marmitaDAO.findById(conn, id);
+            ComboDTO combo = comboDAO.findById(conn, marmita.getCombo().getId());
+            return combo;
+        }
+    }
+    public ProteinaDTO getProteinaByMarmitaId(int id) throws SQLException {
+        try (Connection conn = dataSource.getConnection()) {
+            MarmitaDTO marmita = marmitaDAO.findById(conn, id);
+            ProteinaDTO proteina = proteinaDAO.findById(conn, marmita.getProtenia().getId());
+            return proteina;
+        }
+    }
 }
-
-
-

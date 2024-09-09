@@ -2,7 +2,10 @@
 package br.senac.resource;
 
 
+import br.senac.dto.ComboDTO;
 import br.senac.dto.MarmitaDTO;
+import br.senac.dto.ProteinaDTO;
+import br.senac.service.ComboService;
 import br.senac.service.MarmitaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -22,6 +25,9 @@ public class MarmitaResource {
 
     @Inject
     MarmitaService marmitaService;
+
+    @Inject
+    ComboService comboService;
 
 
     @POST
@@ -113,6 +119,41 @@ public class MarmitaResource {
         try {
             List<MarmitaDTO> marmita = marmitaService.getAllMarmitas();
             return Response.ok(marmita).build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obter o combo da Marmita")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Combo obtido com sucesso"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public Response obterComboDaMarmita(@PathParam("id") int id) {
+        try {
+            ComboDTO combo = marmitaService.getComboByMarmitaId(id);
+            return Response.ok(combo).build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obter o combo da Marmita")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Combo obtido com sucesso"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public Response obterProteinaDaMarmita(@PathParam("id") int id) {
+        try {
+            ProteinaDTO proteina = marmitaService.getProteinaByMarmitaId(id);
+            return Response.ok(proteina).build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

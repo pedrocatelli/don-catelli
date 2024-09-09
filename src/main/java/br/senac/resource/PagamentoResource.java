@@ -1,7 +1,10 @@
 package br.senac.resource;
 
+import br.senac.dto.EnderecoDTO;
 import br.senac.dto.PagamentoDTO;
+import br.senac.dto.PessoaDTO;
 import br.senac.service.PagamentoService;
+import br.senac.service.PessoaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -19,6 +22,9 @@ import java.util.List;
 public class PagamentoResource {
     @Inject
     PagamentoService pagamentoService;
+
+    @Inject
+    PessoaService pessoaService;
 
 
     @POST
@@ -110,6 +116,55 @@ public class PagamentoResource {
         try {
             List<PagamentoDTO> pagamentos = pagamentoService.getAllPagamentos();
             return Response.ok(pagamentos).build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obter Pessoa do Pagamento pelo PagamentoId")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Pessoa obtida com sucesso"),
+            @APIResponse(responseCode = "404", description = "Pagamento não encontrado"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public Response obterPessoaDoPagamentoPorId(@PathParam("id") int id) {
+        try {
+            PagamentoDTO pagamento = pagamentoService.getPagamentoById(id);
+            if (pagamento != null) {
+                PessoaDTO pessoa = pessoaService.getPessoaById(pagamento.getPessoa().getId());
+                return Response.ok(pessoa).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obter Endereco do Pagamento pelo PagamentoId")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Endereco(s) obtido(s) com sucesso"),
+            @APIResponse(responseCode = "404", description = "Endereco(s) não encontrado(s)"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public Response obterEnderecoDoPagamentoPorId(@PathParam("id") int id) {
+        try {
+            PagamentoDTO pagamento = pagamentoService.getPagamentoById(id);
+            if (pagamento != null) {
+                PessoaDTO pessoa = pessoaService.getPessoaById(pagamento.getPessoa().getId());
+                List<EnderecoDTO> enderecos = pessoaService.buscarEnderecos(pessoa.getId());
+                return Response.ok(enderecos).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
