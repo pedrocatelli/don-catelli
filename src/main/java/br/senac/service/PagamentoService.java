@@ -5,6 +5,8 @@ import br.senac.dao.PessoaDAO;
 import br.senac.dto.PagamentoDTO;
 import br.senac.dto.PedidoDTO;
 import br.senac.dto.PessoaDTO;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import javax.sql.DataSource;
@@ -12,12 +14,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+@ApplicationScoped
 public class PagamentoService {
 
+    @Inject
     DataSource dataSource;
 
+    @Inject
     PagamentoDAO pagamentoDAO;
 
+    @Inject
     PessoaDAO pessoaDAO;
 
     @Transactional

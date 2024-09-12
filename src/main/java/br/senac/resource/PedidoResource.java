@@ -126,7 +126,7 @@ public class PedidoResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/marmita")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obter marmita do Pedido")
     @APIResponses({
@@ -144,7 +144,7 @@ public class PedidoResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/pagamento")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obter pagamento do Pedido")
     @APIResponses({

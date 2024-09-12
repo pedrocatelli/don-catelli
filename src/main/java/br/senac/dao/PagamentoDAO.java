@@ -3,6 +3,7 @@ package br.senac.dao;
 import br.senac.dto.EnderecoDTO;
 import br.senac.dto.PagamentoDTO;
 import br.senac.dto.PessoaDTO;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+@ApplicationScoped
 public class PagamentoDAO {
 
     public void save(Connection conn, PagamentoDTO pagamento) throws SQLException {

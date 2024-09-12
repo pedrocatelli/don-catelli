@@ -126,7 +126,7 @@ public class MarmitaResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/combo")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obter o combo da Marmita")
     @APIResponses({
@@ -143,9 +143,9 @@ public class MarmitaResource {
         }
     }
     @GET
-    @Path("/{id}")
+    @Path("/{id}/proteina")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Obter o combo da Marmita")
+    @Operation(summary = "Obter o proteina da Marmita")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Combo obtido com sucesso"),
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")

@@ -1,11 +1,12 @@
 package br.senac.dao;
 
 import br.senac.dto.*;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@ApplicationScoped
 public class MarmitaDAO {
     public void save(Connection conn, MarmitaDTO marmita) throws SQLException {
         String sql = "INSERT INTO public.marmita(id,  id_combo, nome, acompanhamentos, id_proteina) values (?, ?, ?, ?,?)";

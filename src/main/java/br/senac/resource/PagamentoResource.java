@@ -123,7 +123,7 @@ public class PagamentoResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/pessoa")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obter Pessoa do Pagamento pelo PagamentoId")
     @APIResponses({
@@ -147,7 +147,7 @@ public class PagamentoResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id}/endereco")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Obter Endereco do Pagamento pelo PagamentoId")
     @APIResponses({
