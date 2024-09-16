@@ -13,13 +13,14 @@ import java.util.List;
 public class ComboDAO {
 
     public void save(Connection conn, ComboDTO combo) throws SQLException {
-        String sql = "INSERT INTO public.combo(id, nome, descricao, preco) values (?, ?, ?, ?)";
+        String sql = "INSERT INTO public.combo(id, nome, descricao, preco, img64) values (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)){
             int index = 1;
             stmt.setInt(index++, combo.getId());
             stmt.setString(index++, combo.getNome());
             stmt.setString(index++, combo.getDescricao());
-            stmt.setDouble(index, combo.getPreco());
+            stmt.setDouble(index++, combo.getPreco());
+            stmt.setString(index, combo.getImg64());
             stmt.executeUpdate();
 
         }
@@ -55,7 +56,7 @@ public class ComboDAO {
     }
 
     public ComboDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, nome, descricao, preco FROM public.combo WHERE id = ?";
+        String sql = "SELECT id, nome, descricao, preco, img64 FROM public.combo WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -65,6 +66,7 @@ public class ComboDAO {
                     combo.setNome(rs.getString("nome"));
                     combo.setDescricao(rs.getString("descricao"));
                     combo.setPreco(rs.getDouble("preco"));
+                    combo.setImg64(rs.getString("img64"));
 
                     return combo;
                 }
@@ -74,7 +76,7 @@ public class ComboDAO {
     }
 
     public List<ComboDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, id_pessoa, id_endereco, tipo, data_venda FROM public.combo";
+        String sql = "SELECT id, nome, descricao, preco, img64 FROM public.combo";
         List<ComboDTO> combos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -84,6 +86,7 @@ public class ComboDAO {
                 combo.setNome(rs.getString("nome"));
                 combo.setDescricao(rs.getString("descricao"));
                 combo.setPreco(rs.getDouble("preco"));
+                combo.setImg64(rs.getString("img64"));
 
                 combos.add(combo);
             }
