@@ -5,8 +5,17 @@ public class ProteinaDTO {
         private int id;
         private String nome;
         private String descricao;
+        private String img64;
 
-        public String getNome() {
+    public String getImg64() {
+        return img64;
+    }
+
+    public void setImg64(String img64) {
+        this.img64 = img64;
+    }
+
+    public String getNome() {
             return nome;
         }
 

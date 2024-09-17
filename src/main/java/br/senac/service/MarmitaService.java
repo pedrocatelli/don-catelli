@@ -80,4 +80,10 @@ public class MarmitaService {
             return proteina;
         }
     }
+
+    public List<MarmitaDTO> getTop6Marmitas() throws SQLException{
+        try (Connection conn = dataSource.getConnection()){
+            return marmitaDAO.maisPedidas(conn);
+        }
+    }
 }

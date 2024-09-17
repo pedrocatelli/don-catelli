@@ -59,12 +59,12 @@ public class PagamentoDAO {
                     pagamento.setId(rs.getInt("id"));
                     if (rs.getInt("id_pessoa") != 0) {
                         PessoaDTO pessoa = new PessoaDTO();
-                        pessoa.setId(rs.getInt("id"));
+                        pessoa.setId(rs.getInt("id_pessoa"));
                         pagamento.setPessoa(pessoa);
                     }
                     if (rs.getInt("id_endereco") != 0) {
                         EnderecoDTO endereco = new EnderecoDTO();
-                        endereco.setId(rs.getInt("id"));
+                        endereco.setId(rs.getInt("id_endereco"));
                         pagamento.setEndereco(endereco);
                     }
                     pagamento.setTipo(rs.getString("tipo"));
@@ -87,12 +87,12 @@ public class PagamentoDAO {
                 pagamento.setId(rs.getInt("id"));
                 if (rs.getInt("id_pessoa") != 0) {
                     PessoaDTO pessoa = new PessoaDTO();
-                    pessoa.setId(rs.getInt("id"));
+                    pessoa.setId(rs.getInt("id_pessoa"));
                     pagamento.setPessoa(pessoa);
                 }
                 if (rs.getInt("id_endereco") != 0) {
                     EnderecoDTO endereco = new EnderecoDTO();
-                    endereco.setId(rs.getInt("id"));
+                    endereco.setId(rs.getInt("id_endereco"));
                     pagamento.setEndereco(endereco);
                 }
                 pagamento.setTipo(rs.getString("tipo"));

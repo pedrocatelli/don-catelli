@@ -9,7 +9,7 @@ import java.util.List;
 @ApplicationScoped
 public class MarmitaDAO {
     public void save(Connection conn, MarmitaDTO marmita) throws SQLException {
-        String sql = "INSERT INTO public.marmita(id,  id_combo, nome, acompanhamentos, id_proteina) values (?, ?, ?, ?,?)";
+        String sql = "INSERT INTO public.marmita(id,  id_combo, nome, acompanhamentos, id_proteina) values (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
             stmt.setInt(index++, marmita.getId());
@@ -43,7 +43,7 @@ public class MarmitaDAO {
         }
 
     public MarmitaDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, id_combo, nome, acompanhamentos, id_proteina FROM public.marmita WHERE id = ?";
+        String sql = "SELECT id, id_combo, nome, acompanhamentos, id_proteina, img64 FROM public.marmita JOIN public.proteina ON public.marmita.id_proteina = public.proteina.id WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -52,14 +52,15 @@ public class MarmitaDAO {
                     marmita.setId(rs.getInt("id"));
                     if (rs.getInt("id_combo") != 0) {
                         ComboDTO combo = new ComboDTO();
-                        combo.setId(rs.getInt("id"));
+                        combo.setId(rs.getInt("id_combo"));
                         marmita.setCombo(combo);
                     }
                     marmita.setNome(rs.getString("nome"));
                     marmita.setAcompanhamentos(rs.getString("acompanhamentos"));
                     if (rs.getInt("id_proteina") != 0) {
                         ProteinaDTO proteina = new ProteinaDTO();
-                        proteina.setId(rs.getInt("id"));
+                        proteina.setId(rs.getInt("id_proteina"));
+                        proteina.setImg64(rs.getString("img64"));
                         marmita.setProtenia(proteina);
                     }
                     return marmita;
@@ -70,7 +71,7 @@ public class MarmitaDAO {
     }
 
     public List<MarmitaDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, id_marmita, id_pagamento FROM public.pedido";
+        String sql = "SELECT id, id_combo, nome, acompanhamentos, id_proteina, img64 FROM public.marmita JOIN public.proteina ON public.marmita.id_proteina = public.proteina.id";
         List<MarmitaDTO> marmitas = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -79,20 +80,48 @@ public class MarmitaDAO {
                 marmita.setId(rs.getInt("id"));
                 if (rs.getInt("id_combo") != 0) {
                     ComboDTO combo = new ComboDTO();
-                    combo.setId(rs.getInt("id"));
+                    combo.setId(rs.getInt("id_combo"));
                     marmita.setCombo(combo);
                 }
                 marmita.setNome(rs.getString("nome"));
                 marmita.setAcompanhamentos(rs.getString("acompanhamentos"));
                 if (rs.getInt("id_proteina") != 0) {
                     ProteinaDTO proteina = new ProteinaDTO();
-                    proteina.setId(rs.getInt("id"));
+                    proteina.setId(rs.getInt("id_proteina"));
+                    proteina.setImg64(rs.getString("img64"));
                     marmita.setProtenia(proteina);
                 }
                 marmitas.add(marmita);
             }
         }
         return marmitas;
+    }
+
+    public List<MarmitaDTO> maisPedidas(Connection conn) throws SQLException {
+        String sql = "select m.id, m.id_combo,  m.nome, m.acompanhamentos, m.id_proteina, SUM(p.id_marmita) AS total_pedidos from marmita m join pedido p ON m.id = p.id_marmita GROUP by m.id, m.nome ORDER by total_pedidos desc LIMIT 6";
+        List<MarmitaDTO> topMarmitas = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                MarmitaDTO marmita = new MarmitaDTO();
+                marmita.setId(rs.getInt("m.id"));
+                if (rs.getInt("m.id_combo") != 0) {
+                    ComboDTO combo = new ComboDTO();
+                    combo.setId(rs.getInt("id_combo"));
+                    marmita.setCombo(combo);
+                }
+                marmita.setNome(rs.getString("nome"));
+                marmita.setAcompanhamentos(rs.getString("acompanhamentos"));
+                if (rs.getInt("id_proteina") != 0) {
+                    ProteinaDTO proteina = new ProteinaDTO();
+                    proteina.setId(rs.getInt("id_proteina"));
+                    proteina.setImg64(rs.getString("img64"));
+                    marmita.setProtenia(proteina);
+                }
+                topMarmitas.add(marmita);
+            }
+        }
+        return topMarmitas;
     }
 
     public int getNextId(Connection conn) throws SQLException {

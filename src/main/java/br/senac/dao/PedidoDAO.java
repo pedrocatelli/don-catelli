@@ -50,12 +50,12 @@ public class PedidoDAO {
                     pedido.setId(rs.getInt("id"));
                     if (rs.getInt("id_marmita") != 0) {
                         MarmitaDTO marmita = new MarmitaDTO();
-                        marmita.setId(rs.getInt("id"));
+                        marmita.setId(rs.getInt("id_marmita"));
                         pedido.setMarmita(marmita);
                     }
                     if (rs.getInt("id_pagamento") != 0) {
                         PagamentoDTO pagamento = new PagamentoDTO();
-                        pagamento.setId(rs.getInt("id"));
+                        pagamento.setId(rs.getInt("id_pagamento"));
                         pedido.setPagamento(pagamento);
                     }
                     return pedido;
@@ -75,12 +75,12 @@ public class PedidoDAO {
                 pedido.setId(rs.getInt("id"));
                 if (rs.getInt("id_marmita") != 0) {
                     MarmitaDTO marmita = new MarmitaDTO();
-                    marmita.setId(rs.getInt("id"));
+                    marmita.setId(rs.getInt("id_marmita"));
                     pedido.setMarmita(marmita);
                 }
                 if (rs.getInt("id_pagamento") != 0) {
                     PagamentoDTO pagamento = new PagamentoDTO();
-                    pagamento.setId(rs.getInt("id"));
+                    pagamento.setId(rs.getInt("id_pagamento"));
                     pedido.setPagamento(pagamento);
                 }
                 pedidos.add(pedido);

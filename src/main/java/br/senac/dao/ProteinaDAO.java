@@ -17,21 +17,23 @@ import java.util.List;
 public class ProteinaDAO {
 
     public void save(Connection conn, ProteinaDTO proteina) throws SQLException {
-        String sql = "INSERT INTO public.proteina (id, nome, descricao) VALUES (?, ?, ?,)";
+        String sql = "INSERT INTO public.proteina (id, nome, descricao, img64) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
             stmt.setInt(index++, proteina.getId());
             stmt.setString(index++, proteina.getNome());
-            stmt.setString(index, proteina.getDescricao());
+            stmt.setString(index++, proteina.getDescricao());
+            stmt.setString(index, proteina.getImg64());
             stmt.executeUpdate();
         }
     }
 
     public void update(Connection conn,  ProteinaDTO proteina) throws SQLException {
-        String sql = "UPDATE public.proteina SET nome = ?, descricao = ?";
+        String sql = "UPDATE public.proteina SET nome = ?, descricao = ?, img64 = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, proteina.getNome());
             stmt.setString(2, proteina.getDescricao());
+            stmt.setString(3, proteina.getImg64());
             stmt.executeUpdate();
         }
     }
@@ -44,7 +46,7 @@ public class ProteinaDAO {
     }
 
     public ProteinaDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, nome, descricao FROM public.proteina WHERE id = ?";
+        String sql = "SELECT id, nome, descricao, img64 FROM public.proteina WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -53,6 +55,7 @@ public class ProteinaDAO {
                     proteina.setId(rs.getInt("id"));
                     proteina.setNome(rs.getString("nome"));
                     proteina.setDescricao(rs.getString("descricao"));
+                    proteina.setImg64(rs.getString("img64"));
 
                     return proteina;
                 }
@@ -62,7 +65,7 @@ public class ProteinaDAO {
     }
 
     public List<ProteinaDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, nome, descricao FROM public.proteina";
+        String sql = "SELECT id, nome, descricao, img64 FROM public.proteina";
         List<ProteinaDTO> proteinas = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -71,6 +74,7 @@ public class ProteinaDAO {
                 proteina.setId(rs.getInt("id"));
                 proteina.setNome(rs.getString("nome"));
                 proteina.setDescricao(rs.getString("descricao"));
+                proteina.setImg64(rs.getString("img64"));
 
                 proteinas.add(proteina);
             }
