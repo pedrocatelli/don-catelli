@@ -12,7 +12,6 @@ import jakarta.transaction.Transactional;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -76,7 +75,7 @@ public class MarmitaService {
     public ProteinaDTO getProteinaByMarmitaId(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             MarmitaDTO marmita = marmitaDAO.findById(conn, id);
-            ProteinaDTO proteina = proteinaDAO.findById(conn, marmita.getProtenia().getId());
+            ProteinaDTO proteina = proteinaDAO.findById(conn, marmita.getProteina().getId());
             return proteina;
         }
     }

@@ -4,7 +4,7 @@ public class MarmitaDTO {
     private int id;
     private String nome;
     private String acompanhamentos;
-    private ProteinaDTO protenia;
+    private ProteinaDTO proteina;
     private ComboDTO combo;
 
     public int getId() {
@@ -31,12 +31,12 @@ public class MarmitaDTO {
         this.acompanhamentos = acompanhamentos;
     }
 
-    public ProteinaDTO getProtenia() {
-        return protenia;
+    public ProteinaDTO getProteina() {
+        return proteina;
     }
 
-    public void setProtenia(ProteinaDTO protenia) {
-        this.protenia = protenia;
+    public void setProteina(ProteinaDTO proteina) {
+        this.proteina = proteina;
     }
 
     public ComboDTO getCombo() {

@@ -16,7 +16,7 @@ public class MarmitaDAO {
             stmt.setInt(index, marmita.getCombo() != null ? marmita.getCombo().getId() : null);
             stmt.setString(index++, marmita.getNome());
             stmt.setString(index++, marmita.getAcompanhamentos());
-            stmt.setInt(index++, marmita.getProtenia() != null ? marmita.getProtenia().getId() : null);
+            stmt.setInt(index++, marmita.getProteina() != null ? marmita.getProteina().getId() : null);
             stmt.executeUpdate();
         }
     }
@@ -29,7 +29,7 @@ public class MarmitaDAO {
                 stmt.setInt(index, marmita.getCombo() != null ? marmita.getCombo().getId() : null);
                 stmt.setString(index++, marmita.getNome());
                 stmt.setString(index++, marmita.getAcompanhamentos());
-                stmt.setInt(index++, marmita.getProtenia() != null ? marmita.getProtenia().getId() : null);
+                stmt.setInt(index++, marmita.getProteina() != null ? marmita.getProteina().getId() : null);
                 stmt.executeUpdate();
             }
         }
@@ -43,7 +43,7 @@ public class MarmitaDAO {
         }
 
     public MarmitaDTO findById(Connection conn, int id) throws SQLException {
-        String sql = "SELECT id, id_combo, nome, acompanhamentos, id_proteina, img64 FROM public.marmita JOIN public.proteina ON public.marmita.id_proteina = public.proteina.id WHERE id = ?";
+        String sql = "SELECT marmita.id, marmita.id_combo, marmita.nome, marmita.acompanhamentos, marmita.id_proteina, proteina.img64 FROM marmita JOIN proteina ON marmita.id_proteina = proteina.id WHERE marmita.id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -61,7 +61,7 @@ public class MarmitaDAO {
                         ProteinaDTO proteina = new ProteinaDTO();
                         proteina.setId(rs.getInt("id_proteina"));
                         proteina.setImg64(rs.getString("img64"));
-                        marmita.setProtenia(proteina);
+                        marmita.setProteina(proteina);
                     }
                     return marmita;
                 }
@@ -71,7 +71,7 @@ public class MarmitaDAO {
     }
 
     public List<MarmitaDTO> findAll(Connection conn) throws SQLException {
-        String sql = "SELECT id, id_combo, nome, acompanhamentos, id_proteina, img64 FROM public.marmita JOIN public.proteina ON public.marmita.id_proteina = public.proteina.id";
+        String sql = "SELECT marmita.id, marmita.id_combo, marmita.nome, marmita.acompanhamentos, marmita.id_proteina, proteina.img64 FROM marmita JOIN proteina ON marmita.id_proteina = proteina.id";
         List<MarmitaDTO> marmitas = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -89,7 +89,7 @@ public class MarmitaDAO {
                     ProteinaDTO proteina = new ProteinaDTO();
                     proteina.setId(rs.getInt("id_proteina"));
                     proteina.setImg64(rs.getString("img64"));
-                    marmita.setProtenia(proteina);
+                    marmita.setProteina(proteina);
                 }
                 marmitas.add(marmita);
             }
@@ -116,7 +116,7 @@ public class MarmitaDAO {
                     ProteinaDTO proteina = new ProteinaDTO();
                     proteina.setId(rs.getInt("id_proteina"));
                     proteina.setImg64(rs.getString("img64"));
-                    marmita.setProtenia(proteina);
+                    marmita.setProteina(proteina);
                 }
                 topMarmitas.add(marmita);
             }
