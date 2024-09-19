@@ -159,4 +159,22 @@ public class MarmitaResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @GET
+    @Path("/combo/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obter Marmitas do Combo")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Marmitas obtidas com sucesso"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public Response obterMarmitasDoCombo(@PathParam("id") int id) {
+        try {
+            List<MarmitaDTO> marmitas = marmitaService.getMarmitasDeUmCombo(id);
+            return Response.ok(marmitas).build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 }

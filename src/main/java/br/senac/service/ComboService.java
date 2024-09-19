@@ -5,6 +5,7 @@ import br.senac.dao.ComboDAO;
 import br.senac.dao.EnderecoDAO;
 import br.senac.dto.ComboDTO;
 import br.senac.dto.EnderecoDTO;
+import br.senac.dto.MarmitaDTO;
 import br.senac.dto.PessoaDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

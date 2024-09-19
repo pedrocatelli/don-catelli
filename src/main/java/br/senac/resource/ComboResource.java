@@ -1,9 +1,12 @@
 package br.senac.resource;
 
 import br.senac.dto.ComboDTO;
+import br.senac.dto.MarmitaDTO;
 import br.senac.dto.PessoaDTO;
+import br.senac.dto.ProteinaDTO;
 import br.senac.exceptions.PessoaNaoEncontradaException;
 import br.senac.service.ComboService;
+import br.senac.service.MarmitaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -22,6 +25,9 @@ public class ComboResource {
 
     @Inject
     ComboService comboService;
+
+    @Inject
+    MarmitaService marmitaService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

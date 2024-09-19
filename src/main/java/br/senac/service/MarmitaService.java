@@ -85,4 +85,11 @@ public class MarmitaService {
             return marmitaDAO.maisPedidas(conn);
         }
     }
+
+    public List<MarmitaDTO> getMarmitasDeUmCombo(int id) throws SQLException{
+        try (Connection conn = dataSource.getConnection()){
+            return marmitaDAO.findMarmitasDoCombo(conn, id);
+        }
+    }
+
 }

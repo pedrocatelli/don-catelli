@@ -124,6 +124,34 @@ public class MarmitaDAO {
         return topMarmitas;
     }
 
+    public List<MarmitaDTO> findMarmitasDoCombo(Connection conn, int id) throws SQLException {
+        String sql = "SELECT * FROM marmita JOIN combo ON marmita.id_combo = combo.id where combo.id = ?";
+        List<MarmitaDTO> marmitas = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    MarmitaDTO marmita = new MarmitaDTO();
+                    marmita.setId(rs.getInt("id"));
+                    if (rs.getInt("id_combo") != 0) {
+                        ComboDTO combo = new ComboDTO();
+                        combo.setId(rs.getInt("id_combo"));
+                        marmita.setCombo(combo);
+                    }
+                    marmita.setNome(rs.getString("nome"));
+                    marmita.setAcompanhamentos(rs.getString("acompanhamentos"));
+                    if (rs.getInt("id_proteina") != 0) {
+                        ProteinaDTO proteina = new ProteinaDTO();
+                        proteina.setId(rs.getInt("id_proteina"));
+                        proteina.setImg64(rs.getString("img64"));
+                        marmita.setProteina(proteina);
+                    }
+                }
+            }
+        }
+        return marmitas;
+    }
+
     public int getNextId(Connection conn) throws SQLException {
         String sql = "SELECT nextval('public.sq_marmita')";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
