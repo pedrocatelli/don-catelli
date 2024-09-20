@@ -1,10 +1,7 @@
 package br.senac.resource;
 
-import br.senac.dto.EnderecoDTO;
-import br.senac.dto.PagamentoDTO;
-import br.senac.dto.PessoaDTO;
-import br.senac.service.PagamentoService;
-import br.senac.service.PessoaService;
+import br.senac.dto.*;
+import br.senac.service.*;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -25,6 +22,15 @@ public class PagamentoResource {
 
     @Inject
     PessoaService pessoaService;
+
+    @Inject
+    MarmitaService marmitaService;
+
+    @Inject
+    PedidoService pedidoService;
+
+    @Inject
+    RequestService requestService;
 
 
     @POST
@@ -165,6 +171,26 @@ public class PagamentoResource {
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/Compra")
+    @Operation(summary = "Criar uma Compra")
+    @APIResponses({
+            @APIResponse(responseCode = "201", description = "Compra criada com sucesso"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor"),
+
+    })
+    public Response cadastrarCompra(PedidoRequest request) {
+        try {
+            requestService.createCompra(request.getPessoa(), request.getPessoa().getEnderecos().get(0), request.getPagamento(), request.getPedido(), request.getMarmitas());
+            return Response.status(Response.Status.CREATED).entity(request).build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

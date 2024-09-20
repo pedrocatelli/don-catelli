@@ -13,10 +13,10 @@ public class MarmitaDAO {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             int index = 1;
             stmt.setInt(index++, marmita.getId());
-            stmt.setInt(index, marmita.getCombo() != null ? marmita.getCombo().getId() : null);
+            stmt.setInt(index++, marmita.getCombo() != null ? marmita.getCombo().getId() : null);
             stmt.setString(index++, marmita.getNome());
             stmt.setString(index++, marmita.getAcompanhamentos());
-            stmt.setInt(index++, marmita.getProteina() != null ? marmita.getProteina().getId() : null);
+            stmt.setInt(index, marmita.getProteina() != null ? marmita.getProteina().getId() : null);
             stmt.executeUpdate();
         }
     }
