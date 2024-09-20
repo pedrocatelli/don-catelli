@@ -130,7 +130,7 @@ public class MarmitaDAO {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     MarmitaDTO marmita = new MarmitaDTO();
                     marmita.setId(rs.getInt("id"));
                     if (rs.getInt("id_combo") != 0) {
@@ -146,10 +146,11 @@ public class MarmitaDAO {
                         proteina.setImg64(rs.getString("img64"));
                         marmita.setProteina(proteina);
                     }
+                    marmitas.add(marmita);
                 }
             }
+            return marmitas;
         }
-        return marmitas;
     }
 
     public int getNextId(Connection conn) throws SQLException {
